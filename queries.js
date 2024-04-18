@@ -11,7 +11,7 @@ const pool = new Pool({
 
 //route for /foods
 const getFoods = (request, response) => {
-  pool.query("SELECT * FROM food_tmp", (error, results) => {
+  pool.query("SELECT * FROM food", (error, results) => {
     if (error) {
       throw error;
     }
@@ -29,7 +29,7 @@ const insertFood = (request, response) => {
     KJ_per100grams,
   } = request.body;
   pool.query(
-    `INSERT INTO food_tmp (FoodCategory, FoodItem, per100grams, Cals_per100grams, KJ_per100grams) VALUES ($1, $2, $3, $4, $5)`,
+    `INSERT INTO food (FoodCategory, FoodItem, per100grams, Cals_per100grams, KJ_per100grams) VALUES ($1, $2, $3, $4, $5)`,
     [FoodCategory, FoodItem, per100grams, Cals_per100grams, KJ_per100grams],
     (error, results) => {
       if (error) {
@@ -58,7 +58,7 @@ const populateFoods = (request, response) => {
         var Cals_per100grams = source[i]["Cals_per100grams"];
         var KJ_per100grams = source[i]["KJ_per100grams"];
 
-        let insertStatement = `INSERT INTO food_tmp (FoodCategory, FoodItem, per100grams, Cals_per100grams, KJ_per100grams) VALUES ($1, $2, $3, $4, $5)`;
+        let insertStatement = `INSERT INTO food (FoodCategory, FoodItem, per100grams, Cals_per100grams, KJ_per100grams) VALUES ($1, $2, $3, $4, $5)`;
         let items = [
           FoodCategory,
           FoodItem,
