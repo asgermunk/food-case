@@ -50,21 +50,14 @@ const populateFoods = (request, response) => {
   csvtojson()
     .fromFile(caldata, options)
     .then((source) => {
-      //Fetching the data from each row
-      //and inserting to the table food_tmp
+      // Fetching the data from each row and inserting to the table food_tmp
       for (var i = 0; i < source.length; i++) {
-        let fields =
-          source[i][
-            "FoodCategory;FoodItem;per100grams;Cals_per100grams;KJ_per100grams"
-          ].split(";");
-        var FoodCategory = fields[0],
-          FoodItem = fields[1],
-          per100grams = fields[2],
-          Cals_per100grams = fields[3],
-          KJ_per100grams = fields[4];
-        //TODO: fortsæt med de andre kolonner
+        var FoodCategory = source[i]["FoodCategory"];
+        var FoodItem = source[i]["FoodItem"];
+        var per100grams = source[i]["per100grams"];
+        var Cals_per100grams = source[i]["Cals_per100grams"];
+        var KJ_per100grams = source[i]["KJ_per100grams"];
 
-        //TODO: her skal laves to variabler: insertStatement og items.
         let insertStatement = `INSERT INTO food_tmp (FoodCategory, FoodItem, per100grams, Cals_per100grams, KJ_per100grams) VALUES ($1, $2, $3, $4, $5)`;
         let items = [
           FoodCategory,
@@ -73,14 +66,11 @@ const populateFoods = (request, response) => {
           Cals_per100grams,
           KJ_per100grams,
         ];
-        //insertStatement skal bestå af sådan som du vil indsætte data i food_tmp tabellen, men med
-        //placeholders $1, $2 osv i stedet for værdier
-        //items er en array med de variabler der er blevet defineret ud fra vores data lige ovenover
 
-        //Inserting data of current row into database
+        // Inserting data of current row into database
         pool.query(insertStatement, items, (err, results, fields) => {
           if (err) {
-            console.log("Unable to insert item at row " + i + 1);
+            console.log("Unable to insert item at row " + (i + 1));
             return console.log(err);
           }
         });
@@ -88,7 +78,6 @@ const populateFoods = (request, response) => {
       response.status(201).send("All foods added");
     });
 };
-
 module.exports = {
   getFoods,
   insertFood,
